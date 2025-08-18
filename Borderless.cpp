@@ -8,7 +8,7 @@ int main(){
     Sleep(2000);
     HWND windowHandle = FindWindowA(NULL,EXE_NAME.c_str());
     if(!windowHandle){
-        std::cerr << "failed to find sekiro handle\n";
+        std::cerr << "failed to find "+EXE_NAME+" handle\n";
         return 1;
     }
     LONG style = GetWindowLong(windowHandle,GWL_STYLE);
