@@ -1,8 +1,12 @@
 #include <windows.h>
+#include <string>
 #include <iostream>
-#define exe_name "Sekiro"
+const std::string EXE_NAME = "Sekiro";
 int main(){
-    HWND windowHandle = FindWindowA(NULL,exe_name);
+    std::string command = "start "+EXE_NAME+".exe";
+    system(command.c_str());
+    Sleep(2000);
+    HWND windowHandle = FindWindowA(NULL,EXE_NAME.c_str());
     if(!windowHandle){
         std::cerr << "failed to find sekiro handle\n";
         return 1;
