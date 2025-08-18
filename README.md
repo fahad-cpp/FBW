@@ -11,6 +11,6 @@ step 2 : compile Borderless.cpp using
 g++ Borderless.cpp -o Borderless.exe
 ```
 step 3 : put the exe in the same folder as game exe<br>
-step 4 : create a shortcut of the game (not the exe)<br>
+step 4 : create a shortcut of the game<br>
 step 5 : set the target of the shortcut to Borderless.exe<br>
 step 6 : Run Game through the shortcut<br>
