@@ -5,7 +5,7 @@ When playing sekiro i found the fullscreen mode to be too annoying , you cannot 
 But in windowed mode it worked fine , but sekiro does not have a borderless window option , so i coded a program to inject into the game
 and force borderless window.
 ## Usage
-step 1 : if you are using it on game or application besides sekiro , change the EXE_NAME in the fix.cpp file to your program name<br>
+step 1 : if you are using it on game or application besides sekiro , change the EXE_NAME in the Borderless.cpp file to your program name<br>
 step 2 : compile Borderless.cpp using
 ```batch
 g++ Borderless.cpp -o Borderless.exe
