@@ -3,8 +3,15 @@
 #include <string>
 #include <iostream>
 #include <psapi.h>
+#include <vector>
 #include "Logging.h"
 #define MAX_BUFSIZE 1024
+struct Process{
+    DWORD processID;
+    std::string windowName;
+    std::string windowTitle;
+};
+std::vector<Process> runningProcesses = {};
 BOOL CALLBACK EnumWindowsProc(HWND window,LPARAM lparam){
     DWORD processID = 0;
     GetWindowThreadProcessId(window,&processID);
@@ -26,8 +33,8 @@ BOOL CALLBACK EnumWindowsProc(HWND window,LPARAM lparam){
         if(EnumProcessModules(hProcess,&hMod,sizeof(hMod),&cbNeeded)){
             GetModuleBaseNameA(hProcess,hMod,windowName,sizeof(windowName));
         }
-
-        LOG(windowName<<":"<<windowTitle<<":ID:"<<processID<<"\n");
+        runningProcesses.push_back(Process{processID,windowName,windowTitle});
+        //LOG(windowName<<":"<<windowTitle<<":ID:"<<processID<<"\n");
         CloseHandle(hProcess);
     }
     return TRUE;
@@ -46,9 +53,19 @@ int makeBorderless(std::string exeName){
     exStyle &= ~(WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE);
     SetWindowLong(windowHandle, GWL_EXSTYLE, exStyle);
     SetWindowPos(windowHandle,NULL,0,0,0,0,SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+    LOG("Successfully made "<<exeName<<" borderless.\n");
     return 0;
 }
 int main(){
     EnumWindows(EnumWindowsProc,0);
+    int i = 1;
+    for(Process process : runningProcesses){
+        LOG(i<<".Process ID:"<<process.processID<<" Process Name:"<<process.windowName<<" Process Title:"<<process.windowTitle<<"\n");
+        i++;
+    }
+    int choice = 0;
+    LOG("Select your program:");
+    std::cin>>choice;
+    makeBorderless(runningProcesses[choice-1].windowTitle);
     return 0;
 }
