@@ -66,6 +66,7 @@ int main(){
     int choice = 0;
     LOG("Select your program:");
     std::cin>>choice;
+    std::cin.get();
     makeBorderless(runningProcesses[choice-1].windowTitle);
     std::cin.get();
     return 0;
