@@ -14,5 +14,7 @@ cmake --build .
 ## Usage
 step 1 : Run your game<br>
 step 2 : Run FBW-Win64.exe<br>
+<img width="850" height="187" alt="image" src="https://github.com/user-attachments/assets/3cf2dc77-f890-4914-857f-b5722f849295" />
+
 step 3 : Select your game from the menu<br>
 And your program will become borderless!
