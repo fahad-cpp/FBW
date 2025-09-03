@@ -53,19 +53,20 @@ int makeBorderless(std::string exeName){
     exStyle &= ~(WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE);
     SetWindowLong(windowHandle, GWL_EXSTYLE, exStyle);
     SetWindowPos(windowHandle,NULL,0,0,0,0,SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-    LOG("Successfully made "<<exeName<<" borderless.\n");
+    LOG_SUCCESS("Successfully made "<<exeName<<" borderless.\n");
     return 0;
 }
 int main(){
     EnumWindows(EnumWindowsProc,0);
     int i = 1;
     for(Process process : runningProcesses){
-        LOG(i<<".Process ID:"<<process.processID<<" Process Name:"<<process.windowName<<" Process Title:"<<process.windowTitle<<"\n");
+        LOG(i<<"."<<purple<<process.windowName<<white<<":"<<process.windowTitle<<"\n");
         i++;
     }
     int choice = 0;
     LOG("Select your program:");
     std::cin>>choice;
     makeBorderless(runningProcesses[choice-1].windowTitle);
+    std::cin.get();
     return 0;
 }
