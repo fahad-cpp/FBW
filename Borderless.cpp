@@ -1,14 +1,41 @@
-#include <windows.h>
-#include <psapi.h>
-#include <iostream>
+#include <Windows.h>
+#include <tlhelp32.h>
 #include <string>
-BOOL EnumWindowsProc(HWND window,LPARAM lparam){
-    
+#include <iostream>
+#include <psapi.h>
+#include "Logging.h"
+#define MAX_BUFSIZE 1024
+BOOL CALLBACK EnumWindowsProc(HWND window,LPARAM lparam){
+    DWORD processID = 0;
+    GetWindowThreadProcessId(window,&processID);
+    if(!IsWindowVisible(window) || IsIconic(window)){
+        return TRUE;
+    }
+
+    char windowTitle[256];
+    GetWindowTextA(window,windowTitle,sizeof(windowTitle));
+    if(strlen(windowTitle) == 0){
+        return TRUE;
+    }
+
+    HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,FALSE,processID);
+    if(hProcess){
+        char windowName[MAX_BUFSIZE] = "<unknown>";
+        HMODULE hMod;
+        DWORD cbNeeded;
+        if(EnumProcessModules(hProcess,&hMod,sizeof(hMod),&cbNeeded)){
+            GetModuleBaseNameA(hProcess,hMod,windowName,sizeof(windowName));
+        }
+
+        LOG(windowName<<":"<<windowTitle<<":ID:"<<processID<<"\n");
+        CloseHandle(hProcess);
+    }
+    return TRUE;
 }
-int makeborderless(std::string& exeName){
+int makeBorderless(std::string exeName){
     HWND windowHandle = FindWindowA(NULL,exeName.c_str());
     if(!windowHandle){
-        std::cerr << "Failed to find window handle of "+exeName+"\n";
+        LOG_ERROR("Failed to find window handle of process:"<<exeName<<"\n");
         return 1;
     }
     LONG style = GetWindowLong(windowHandle,GWL_STYLE);
@@ -21,7 +48,7 @@ int makeborderless(std::string& exeName){
     SetWindowPos(windowHandle,NULL,0,0,0,0,SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
     return 0;
 }
-int main() {
+int main(){
     EnumWindows(EnumWindowsProc,0);
     return 0;
 }
