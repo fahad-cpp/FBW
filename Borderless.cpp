@@ -34,7 +34,6 @@ BOOL CALLBACK EnumWindowsProc(HWND window,LPARAM lparam){
             GetModuleBaseNameA(hProcess,hMod,windowName,sizeof(windowName));
         }
         runningProcesses.push_back(Process{processID,windowName,windowTitle});
-        //LOG(windowName<<":"<<windowTitle<<":ID:"<<processID<<"\n");
         CloseHandle(hProcess);
     }
     return TRUE;
@@ -51,8 +50,15 @@ int makeBorderless(std::string exeName){
 
     LONG exStyle = GetWindowLong(windowHandle, GWL_EXSTYLE);
     exStyle &= ~(WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE);
-    SetWindowLong(windowHandle, GWL_EXSTYLE, exStyle);
-    SetWindowPos(windowHandle,NULL,0,0,0,0,SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+
+    int width,height,x,y;
+    width = 1920;
+    height = 1080;
+    x = 0;
+    y = 0;
+    SetWindowPos(windowHandle,NULL,x,y,width,height, SWP_NOZORDER | SWP_FRAMECHANGED);
+    RECT rect;
+    GetClientRect(windowHandle, &rect);
     LOG_SUCCESS("Successfully made "<<exeName<<" borderless.\n");
     return 0;
 }
